@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Brady Bunch Trivia</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div id="quiz">
+        <span id="timeLeft"></span>
+        <form name="quizForm">
+            <span id="question"></span>
+            <span id="optionA"></span>
+            <span id="optionB"></span>
+            <span id="optionC"></span>
+            <span id="optionD"></span>
+        </form>
+        <span id="totalCorrect"></span>
+        <span id="totalWrong"></span>
+        <span id="totalUnanswered"></span>
+    </div>
+
+    <div id="finalStats"></div>
+
+    <script>
+        $(document).ready(function () {
+            
+            var timeLeft = 10;
+
+            function countdown() {
+                setTimeout(countdown, 1000);
+                $("#timeLeft").text(timeLeft + " seconds left");
+                timeLeft--;
+
+                if (timeLeft <= 0) {
+                    timeLeft = 10;
+                    //show correct Answer
+                    totalUnanswered++;
+                    $("#totalUnanswered").html("Total Unanswered: "+totalUnanswered);
+                    getNewQuestion();
+                }
+            }
+
+            countdown();
+
+            var questions = [
+                ["What is housekeepers name?", "Hazel", "Mary", "Alice", "Phyllis", "C"],
+                ["What is dogs name?", "Rex", "Tiger", "Mutt", "Max", "B"],
+                ["Whos known for Marcia, Marcia, Marcia?", "Cindy", "Peter", "Mary", "Jan", "D"],
+                ["Who broke Marcia's nose?", "Bobby", "Jim", "Peter", "Greg", "D"],
+            ];
+            var indexNumber = 0;
+            var correctAnswer;
+            var newQuestionNumber = indexNumber + 1;
+
+            var totalCorrect = 0;
+            var totalWrong = 0;
+            var totalUnanswered = 0;
+            var userAnswer;
+
+            function startQuestions() {
+                question = questions[indexNumber][0];
+                optionA = questions[indexNumber][1];
+                optionB = questions[indexNumber][2];
+                optionC = questions[indexNumber][3];
+                optionD = questions[indexNumber][4];
+                correctAnswer = questions[indexNumber][5];
+
+                $("#question").html(questions[indexNumber][0]);
+                $("#optionA").html("<input type='radio' name='options' value='A'>" + questions[indexNumber][1]);
+                $("#optionB").html("<input type='radio' name='options' value='B'>" + questions[indexNumber][2]);
+                $("#optionC").html("<input type='radio' name='options' value='C'>" + questions[indexNumber][3]);
+                $("#optionD").html("<input type='radio' name='options' value='D'>" + questions[indexNumber][4]);
+
+                getUserAnswer();            }
+
+
+            function getUserAnswer() {
+                //while time is not up
+                $('input[type="radio"]').click(function () {
+                    if ($(this).is(':checked')) {
+                        userAnswer = ($(this).val());
+                        console.log("userAnswer " + userAnswer);
+                        checkAnswer = $(function () {
+                            console.log("user", userAnswer, "correct", correctAnswer, "compare", userAnswer === correctAnswer);
+                            if (userAnswer === questions[indexNumber][5]) {
+                                alert("Correct!");
+                                totalCorrect++;
+                                $("#totalCorrect").html("Total Correct: "+totalCorrect);
+                                getNewQuestion();
+                            }
+                            else {
+                                alert("Wrong");
+                                totalWrong++;
+                                $("#totalWrong").html("Total Wrong: "+totalWrong);
+                                getNewQuestion();
+                            }
+                        });
+                    }
+                });
+            };
+
+            function getNewQuestion() {
+
+                indexNumber++;
+                if (questions[indexNumber]) {
+                    correctAnswer = questions[indexNumber][5];
+
+                    $("#question").html(questions[indexNumber][0]);
+                    $("#optionA").html("<input type='radio' name='options' value='A'>" + questions[indexNumber][1]);
+                    $("#optionB").html("<input type='radio' name='options' value='B'>" + questions[indexNumber][2]);
+                    $("#optionC").html("<input type='radio' name='options' value='C'>" + questions[indexNumber][3]);
+                    $("#optionD").html("<input type='radio' name='options' value='D'>" + questions[indexNumber][4]);
+
+
+                    var correctAnswer = questions[indexNumber][5];
+                    console.log(correctAnswer);
+                    console.log("new question= " + questions[indexNumber][0]);
+                    console.log("new correctAnswer= " + correctAnswer);
+                    console.log("new indexNumber= " + indexNumber);
+
+                    getUserAnswer();
+                }
+                else {
+                    console.log("done!");
+                    showFinalStats();
+                }
+            }
+
+
+            function showFinalStats(){
+                $("#finalStats").show;
+            }
+
+            startQuestions();
+
+
+        }); 
+    </script>
+
+
+
+
+</body>
+
+
+
+
+</html>
